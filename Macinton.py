@@ -35,7 +35,6 @@ if opened != 1:
 def newtake(event):
     global strscode, stringsare, windo, newenter
     if strscode == 1:
-        #comms.append(newenter.get())
         comms.append(newenter)
     newenter = Entry(windo, width=128)
     newenter.grid(column=1, row=stringsare+1)
