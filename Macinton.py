@@ -9,31 +9,33 @@ def save_file():
         for entry in comms:
             f.write(entry.get()+'\n')
         
-
+strscode = 1
+stringsare = 1
 opened = 0
 def open_file():
-    global opened
+    global opened, strscode, stringsare
     opened = 1
     with fd.askopenfile(mode='r') as reader:
+        global commas
         commas = reader.readlines()
         commasw = 1
         for commasnames in commas:
             newenter = Entry(windo, width=128)
             newenter.grid(column=1, row=commasw)
-            newenter.insert(0, commasnames)
+            newenter.insert(0, commasnames.strip())
             newenter.bind('<Return>', newtake)
             commasw += 1
         strscode = commasw
-    return opened, strscode
+        stringsare = strscode
+    return opened, strscode, stringsare
         
         
-
+takenew = 1
 comms = []
-if opened != 1:
-    strscode = 1
+
 
 def newtake(event):
-    global strscode, stringsare, windo, newenter
+    global strscode, stringsare, windo, newenter, takenew
     if strscode == 1:
         comms.append(newenter)
     newenter = Entry(windo, width=128)
@@ -44,8 +46,6 @@ def newtake(event):
     newenter.bind('<Return>', newtake)
     return stringsare, strscode
 
-if opened != 1:
-    stringsare = 1
 
 windo = Tk()
 windo.title('Macinton 0')
