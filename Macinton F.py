@@ -3,18 +3,19 @@ from tkinter.filedialog import asksaveasfile
 from keyboard import add_hotkey
 from tkinter import filedialog as fd
 from tkinter import messagebox
+from webbrowser import *
 
 
 #commands
 commslist = ['write@new^^ ', 'write^^ ', 'numerous ', 'string ', 'list ', 'bool', 'times$do% ', 'take$v}', 'in@']
 #is do
 isdo = '& '
-#is take on new string or not
-istakenew = '< '
+
 #should write list
 shouldwrite = []
-#taked by take$
-taked = {}
+#let's do vars for vars
+vars_names = []
+vars_include = []
 #comms should do
 commsdo = 1
 #strings are
@@ -30,6 +31,24 @@ cl = False
 debug_strings = 1
 #if correct include, print error on take NONE
 t_in_e = True
+#takelist
+takelist = []
+#comms
+comms = []
+#logs list
+logs = []
+#settings
+sb = False
+#find vars in write
+vars_collected = []
+
+
+def check_include(find_in, your_list):
+    before = 0
+    for take in your_list:
+        if take in find_in:
+            your_list.append(take)
+            before += 1
 
 
 def change_uc_var_i():
@@ -60,7 +79,7 @@ def show_inside_comms():
 
 def save_file():
     try:
-         with asksaveasfile(initialfile = 'Project.Macinton', defaultextension="",filetypes=[("All Files","*.*"),("Macinton","*Macinton")]) as f:
+         with asksaveasfile(initialfile = 'Project.', defaultextension="",filetypes=[("All Files","*.*"),("Macinton","*mcfp")]) as f:
               for entry in comms:
                    f.write(entry.get()+'\n')
     except:
@@ -72,7 +91,7 @@ def open_helper():
     
     
 def run_code():
-    global comms, commsdo, shouldwrite, strsgrid, runtime, string, sc, debug_win, cl, strings_grides, debug_strings, t_in_e
+    global comms, commsdo, shouldwrite, strsgrid, runtime, string, sc, debug_win, cl, strings_grides, debug_strings, t_in_e, takelist, logs, sb, vars_include, vars_names
     #list with commands
     takelist = []
     for comlist in comms:
@@ -82,12 +101,22 @@ def run_code():
     #print(comms)
     for takecom in takelist:
         if sc:
-            debug_string = Label(debug_win ,text=takecom)
-            debug_string.grid(column=1, row=debug_strings)
-            debug_strings += 1
+            try:
+                debug_string = Label(debug_win ,text=takecom)
+                debug_string.grid(column=1, row=debug_strings)
+                debug_strings += 1
+            except:
+                pass
+
         if takecom[0:14] == isdo + commslist[0]:
-              string = Label(text=takecom[14:])
-              strings_grides.append(string)
+              if vars_names:
+                  string = Label(text=takecom[14:])
+                  strings_grides.append(string)
+
+              else:
+                  string = Label(text=vars_include[vars_names.index(takecom[14:])])
+                  strings_grides.append(string)
+
               if cl == False:
                     string.grid(column=200, row=strsgrid)
                     strsgrid += 1
@@ -98,38 +127,57 @@ def run_code():
 
                   cl = False
                   strsgrid = 1
-        elif takecom == '%var_error_be%':
+
+        elif takecom == '#PROJECT SETTINGS#':
+            if sb == False:
+                sb = True
+            else:
+                sb = False
+
+
+        elif takecom == '%var_error_be%' and sb:
             change_uc_var_i()
+
+        elif takecom == '%chat%' and sb:
+            open_new('https://t.me/+fd3TDUusml9iNzhi')
+
+        elif takecom == '%hbf!%':
+            messagebox.showinfo(title='Happy Birthday!', message='Happy Birthday!')
 
         elif 'take$' in takecom:
             print('num')
             new_str = takecom[0:4] == '& < '
             var_type = ''
             if new_str:
-                #var type(nemurous, string, list, bool)
-                var_type = takecom[4:takecom.index('$')-5]
+                #var type(numerous, string, list, bool)
+                var_type = takecom[4+takecom.index('$'):]
                 print(var_type)
-                #var name take$VAR NAME}VAR INCLUDES(if nothing or ucorrect include var includes, var includes NONE. NONE + int = int, NONE + string = string)
-                var_name = takecom[4+len(var_type)+6:takecom.index('}')]
+                #var name take$VAR TYPE$VAR NAME}VAR INCLUDESif nothing or ucorrect include var include, var includes NONE. NONE + numerous = numerous, NONE + string = string)
+                #do var name
+                var_name = takecom[4+len(var_type)+1:]
+                finish_index = var_name.index('$')
+                var_name = var_name[finish_index:]
                 print(var_name)
+                var = takecom[4+8+5+len(var_name)+2:]
                 if var_type == 'numerous':
-                    for char_take_var_check in takecom[4+8+5+len(var_name)+1]:
+                    for char_take_var_check in takecom[4+8+5+len(var_name)+2:]:
                         #check correct
-                        if char_take_var_check is not [str(i) for i in range(11)]:
+                        print(char_take_var_check)
+                        if char_take_var_check is not ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', ',', '.', '-']:
                             #is uncorrect could be
-                            if t_in_e:
+                            if t_in_e or var.count(',') > 1 or var.count('.') > 1 or var.count('-') > 1:
                                 include_var_none = [var_type, 'NONE']
-                                taked[var_name] = include_var_none
-                                print(taked.get(var_name[1]))
+                                vars_names.append(var_name)
+                                vars_include(var)
                             else:
-                                messagebox.showinfo(title='Var error', message='Var error. Solves: change include or use &var_error_be')
+                                messagebox.showinfo(title='Var error', message='Var error. Solves: change include or use &var_error_be%')
                                 break
-
 
 
     runtime += 1
 
-        
+comms.clear()
+     
 strscode = 1
 stringsare = 1
 opened = 0
@@ -137,7 +185,7 @@ def open_file():
     try:
          global opened, strscode, stringsare, runtime
          opened = 1
-         with fd.askopenfile(mode='r') as reader:
+         with fd.askopenfile(mode='r', filetypes=[('Macinton', '*mcfp')]) as reader:
               global commas
               commas = reader.readlines()
               commasw = 1
@@ -156,7 +204,6 @@ def open_file():
          
         
 takenew = 1
-comms = []
 
 
 def newtake(event):
@@ -175,6 +222,11 @@ def newtake(event):
 windo = Tk()
 windo.title('Macinton')
 windo.geometry('2048x1024')
+try:
+    windo.iconbitmap('nsr.ico')
+except:
+    messagebox.showerror(title='File error', message='Icon has been removed. Back icon to the dir with Macinton\nUnless delete and install Macinton again')
+    exit()
 
 
 help = Button(windo, text='Open helper', command=open_helper)
