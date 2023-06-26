@@ -1,6 +1,8 @@
-!
-There's can be a civil war in Russia(I live in Moscow). So, Macinton F will be later.
-Also, I have others news:
-1. Changes in Macinton F code
-2. New small language will be soon
-Goodbye :D
+Full release will be in December
+In release:
+1. Macinton F
+2. DataT
+3. BullS(IDE for Macinton and DataT)
+4. MEXE(Macinton F to .exe)
+5. New Installer
+
