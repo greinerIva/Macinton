@@ -1,0 +1,24 @@
+$OUTPUT_FILE: %VALUE% FAR F
+! we maked const with output file as F
+%BUFFER% CIN : FAR F : %NAME_BUFFER%
+! we made buffer for file with name in %NAME%
+! FAR - File As Argument
+! FAR is F
+#CB : %NAME% : {
+F [ WR : %NAME% : hi ]
+F [ CLAIM : str : CIN : %NAME_BUFFER% ]
+
+! CIN - Claim In
+
+! we wrote "hi" in output file and claim value from string(replace str to string's number)
+
+! imagine that we wrote "hi" in %NAME%
+
+! in file:
+
+! hi : hi
+! in buffer:
+! hi
+%NAME% } 
+#CB : EXEC: %NAME%
+! we run code in sect with name "%NAME%"
